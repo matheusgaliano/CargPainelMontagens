@@ -1,0 +1,38 @@
+body {
+  font-family: "Inter", sans-serif;
+}
+
+#header-logo {
+  height: 32px;
+  width: auto;
+}
+
+.card {
+  cursor: grab;
+}
+
+.coluna-titulo {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #4b5563;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1rem;
+  flex-shrink: 0;
+}
+
+.cards-container {
+  padding: 1rem;
+  flex-grow: 1;
+  overflow-y: auto;
+  space-y: 1rem;
+}
+
+.cards-container::-webkit-scrollbar {
+  display: none;
+}
+
+.cards-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

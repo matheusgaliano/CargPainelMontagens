@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Painel de Carregamento</title>
+
+    <link rel="icon" type="image/png" href="assets/img/icon-carg.png" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md">
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col lg:flex-row justify-between items-center"
+      >
+        <div class="flex items-center space-x-3 self-start lg:self-center">
+          <img
+            id="header-logo"
+            src="assets/img/logo-carg.png"
+            alt="Logo da Empresa"
+          />
+          <h1 class="text-xl md:text-2xl font-bold text-gray-800">
+            Painel de Carregamento
+          </h1>
+        </div>
+
+        <div
+          class="w-full lg:w-auto flex flex-col lg:flex-row items-center space-y-2 lg:space-y-0 lg:space-x-4 mt-2 lg:mt-0"
+        >
+          <div
+            class="flex items-center space-x-2 w-full lg:w-auto justify-center lg:justify-end"
+          >
+            <span id="display-usuario" class="text-sm font-medium text-gray-600"
+              >Carregando...</span
+            >
+            <button
+              id="btn-sair"
+              class="hidden text-gray-500 hover:text-red-600 transition duration-150"
+              title="Sair"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div class="flex space-x-2 w-full lg:w-auto">
+            <button
+              id="btn-arquivar"
+              class="flex-1 lg:flex-none bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-3 rounded-lg shadow transition duration-300 hidden text-sm"
+            >
+              Arquivar Prontas
+            </button>
+            <button
+              id="btn-abrir-modal"
+              class="flex-1 lg:flex-none bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-lg shadow transition duration-300 hidden text-sm"
+            >
+              + Adicionar
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main
+      id="quadro-principal"
+      class="max-w-7xl mx-auto p-4 sm:px-6 lg:p-8 grid grid-cols-1 md:grid-cols-3 gap-6"
+    >
+      <div
+        class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-[65vh] md:h-[75vh]"
+      >
+        <h2 class="coluna-titulo">1. Aguardando Montagem</h2>
+        <div id="coluna-aguardando" class="cards-container"></div>
+      </div>
+
+      <div
+        class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-[65vh] md:h-[75vh]"
+      >
+        <h2 class="coluna-titulo">2. Em Processo de Montagem</h2>
+        <div id="coluna-processo" class="cards-container"></div>
+      </div>
+
+      <div
+        class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col h-[65vh] md:h-[75vh]"
+      >
+        <h2 class="coluna-titulo">3. Carreta Pronta</h2>
+        <div id="coluna-pronta" class="cards-container"></div>
+      </div>
+    </main>
+
+    <div
+      id="modal-adicionar"
+      class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 p-4"
+    >
+      <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-lg">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">
+          Adicionar Nova Carreta
+        </h3>
+        <form id="form-adicionar">
+          <div class="space-y-4">
+            <div>
+              <label for="placa" class="block text-sm font-medium text-gray-700"
+                >Placa da Carreta</label
+              >
+              <input
+                type="text"
+                id="placa"
+                name="placa"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Ex: ABC-1234"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="destino"
+                class="block text-sm font-medium text-gray-700"
+                >Destino</label
+              >
+              <input
+                type="text"
+                id="destino"
+                name="destino"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Ex: Rio de Janeiro - RJ"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="produtos"
+                class="block text-sm font-medium text-gray-700"
+                >Produtos e Paletes</label
+              >
+              <textarea
+                id="produtos"
+                name="produtos"
+                rows="4"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Ex:&#10;- 50 paletes de Produto A&#10;- 30 paletes de Produto B"
+                required
+              ></textarea>
+            </div>
+          </div>
+          <div class="mt-6 flex justify-end space-x-3">
+            <button
+              type="button"
+              id="btn-cancelar-modal"
+              class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition duration-300"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+            >
+              Salvar Carreta
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div
+      id="modal-editar"
+      class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 p-4"
+    >
+      <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-lg">
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Editar Carreta</h3>
+        <form id="form-editar">
+          <input type="hidden" id="input-id-editar" name="id" />
+          <div class="space-y-4">
+            <div>
+              <label
+                for="input-placa-editar"
+                class="block text-sm font-medium text-gray-700"
+                >Placa da Carreta</label
+              >
+              <input
+                type="text"
+                id="input-placa-editar"
+                name="placa"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="input-destino-editar"
+                class="block text-sm font-medium text-gray-700"
+                >Destino</label
+              >
+              <input
+                type="text"
+                id="input-destino-editar"
+                name="destino"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                required
+              />
+            </div>
+            <div>
+              <label
+                for="input-produtos-editar"
+                class="block text-sm font-medium text-gray-700"
+                >Produtos e Paletes</label
+              >
+              <textarea
+                id="input-produtos-editar"
+                name="produtos"
+                rows="4"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                required
+              ></textarea>
+            </div>
+          </div>
+          <div class="mt-6 flex justify-end space-x-3">
+            <button
+              type="button"
+              id="btn-cancelar-modal-editar"
+              class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition duration-300"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+            >
+              Salvar Edição
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div
+      id="modal-login"
+      class="hidden fixed inset-0 bg-gray-900 bg-opacity-90 flex items-center justify-center z-50 p-4"
+    >
+      <div class="bg-white rounded-lg shadow-2xl p-8 w-full max-w-sm">
+        <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
+          Identifique-se
+        </h3>
+        <form id="form-login">
+          <div class="space-y-4">
+            <div>
+              <label
+                for="input-nome"
+                class="block text-sm font-medium text-gray-700"
+                >Qual é o seu nome?</label
+              >
+              <input
+                type="text"
+                id="input-nome"
+                name="nome"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Ex: Matheus"
+                required
+              />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700"
+                >Qual é a sua função?</label
+              >
+              <div class="mt-2 space-y-2">
+                <label for="funcao-operacional" class="flex items-center">
+                  <input
+                    type="radio"
+                    id="funcao-operacional"
+                    name="funcao"
+                    value="operacional"
+                    class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                    required
+                  />
+                  <span class="ml-2 text-sm text-gray-700">Operacional</span>
+                </label>
+                <label for="funcao-conferente" class="flex items-center">
+                  <input
+                    type="radio"
+                    id="funcao-conferente"
+                    name="funcao"
+                    value="conferente"
+                    class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                  />
+                  <span class="ml-2 text-sm text-gray-700">Conferente</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6">
+            <button
+              type="submit"
+              class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+            >
+              Entrar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div
+      id="modal-confirmacao"
+      class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50 p-4"
+    >
+      <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-sm">
+        <h3 class="text-lg font-bold text-gray-800 mb-4">Confirmar Ação</h3>
+        <p id="confirmacao-texto" class="text-sm text-gray-600 mb-6">
+          Tem certeza?
+        </p>
+        <div class="flex justify-end space-x-3">
+          <button
+            type="button"
+            id="btn-cancelar-confirmacao"
+            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg transition duration-300"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            id="btn-confirmar-confirmacao"
+            class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
+          >
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="mensagem-status"
+      class="fixed top-4 right-4 bg-red-500 text-white p-3 rounded-lg shadow-xl hidden z-50"
+    ></div>
+
+    <script type="module" src="script.js"></script>
+  </body>
+</html>
